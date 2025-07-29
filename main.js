@@ -1,38 +1,75 @@
-// Productos disponibles
-const productos = ["Camiseta", "Pantalón", "Zapatillas"];
-const precios = [20, 40, 60];
+const productos = [
+  { id: 1, nombre: "Grama Bahiana 1ra", precio: 1500, imagen: "grama1.jpg" },
+  { id: 2, nombre: "Grama Mezcla", precio: 1200, imagen: "grama2.jpg" },
+  { id: 3, nombre: "Tierra Abonada", precio: 1000, imagen: "tierra.jpg" },
+  { id: 4, nombre: "Turba", precio: 800, imagen: "turba.jpg" },
+];
 
-// Carrito vacío
-let carrito = [];
+const renderProductos = () => {
+  const contenedor = document.getElementById("lista-productos");
+  if (!contenedor) return;
 
-// Mostrar productos
-let mensaje = "Elige un producto (1, 2 o 3):\n";
-for (let i = 0; i < productos.length; i++) {
-  mensaje += (i + 1) + ". " + productos[i] + " - $" + precios[i] + "\n";
-}
+  productos.forEach(prod => {
+    const div = document.createElement("div");
+    div.className = "producto";
+    div.innerHTML = `
+      <img src="${prod.imagen}" alt="${prod.nombre}">
+      <h3>${prod.nombre}</h3>
+      <p>Precio: $${prod.precio}</p>
+      <button class="btn-agregar" data-id="${prod.id}">Agregar al carrito</button>
+    `;
+    contenedor.appendChild(div);
+  });
 
-// Pedir al usuario que elija
-let opcion = prompt(mensaje);
-let productoElegido;
+  document.querySelectorAll(".btn-agregar").forEach(btn =>
+    btn.addEventListener("click", agregarAlCarrito)
+  );
+};
 
-switch (opcion) {
-  case "1":
-    productoElegido = productos[0];
-    carrito.push(precios[0]);
-    break;
-  case "2":
-    productoElegido = productos[1];
-    carrito.push(precios[1]);
-    break;
-  case "3":
-    productoElegido = productos[2];
-    carrito.push(precios[2]);
-    break;
-  default:
-    alert("Opción no válida");
-}
+const agregarAlCarrito = (e) => {
+  const id = parseInt(e.target.dataset.id);
+  const producto = productos.find(p => p.id === id);
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  carrito.push(producto);
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+};
 
-// Mostrar resultado final si eligió bien
-if (productoElegido) {
-  alert("Agregaste " + productoElegido + " al carrito.\nTotal a pagar: $" + carrito[0]);
-}
+const mostrarCarrito = () => {
+  const lista = document.getElementById("carrito-lista");
+  if (!lista) return;
+
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  lista.innerHTML = "";
+
+  carrito.forEach((prod, index) => {
+    const li = document.createElement("li");
+    li.innerHTML = `${prod.nombre} - $${prod.precio}
+      <button data-index="${index}" class="btn-eliminar">Eliminar</button>`;
+    lista.appendChild(li);
+  });
+
+  document.querySelectorAll(".btn-eliminar").forEach(btn =>
+    btn.addEventListener("click", eliminarDelCarrito)
+  );
+};
+
+const eliminarDelCarrito = (e) => {
+  const index = parseInt(e.target.dataset.index);
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  carrito.splice(index, 1);
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+  mostrarCarrito();
+};
+
+const vaciarCarrito = () => {
+  localStorage.removeItem("carrito");
+  mostrarCarrito();
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderProductos();
+  mostrarCarrito();
+
+  const btnVaciar = document.getElementById("vaciar-carrito");
+  if (btnVaciar) btnVaciar.addEventListener("click", vaciarCarrito);
+});

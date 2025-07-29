@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Campos del Pehuén | Inicio</title>
+  <title>Carrito de Compras</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="ecommerce.css" />
+  <script src="main.js" defer></script>
 </head>
 <body>
   <header class="header">
@@ -15,20 +16,16 @@
         <ul class="nav">
           <li><a href="index.html">Inicio</a></li>
           <li><a href="productos.html">Productos</a></li>
-          <li><a href="mantenimiento.html">Mantenimiento</a></li>
-          <li><a href="carrito.html">Carrito</a></li>
+          <li><a href="carrito.html" class="active">Carrito</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <main class="hero">
-    <div class="hero-content">
-      <h1>Campos del Pehuén</h1>
-      <p>Grama y tierra abonada premium directo del campo</p>
-      <a href="productos.html" class="btn">Ver Productos</a>
-    </div>
+  <main class="carrito">
+    <h2>Tu Carrito</h2>
+    <ul id="carrito-lista"></ul>
+    <button id="vaciar-carrito" class="btn">Vaciar Carrito</button>
   </main>
 </body>
 </html>
-
